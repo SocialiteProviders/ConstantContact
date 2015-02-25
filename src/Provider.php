@@ -12,7 +12,9 @@ class Provider extends AbstractProvider implements ProviderInterface
      */
     protected function getAuthUrl($state)
     {
-        return $this->buildAuthUrlFromBase('https://oauth2.constantcontact.com/oauth2/oauth/siteowner/authorize', $state);
+        return $this->buildAuthUrlFromBase(
+            'https://oauth2.constantcontact.com/oauth2/oauth/siteowner/authorize', $state
+        );
     }
 
     /**
@@ -28,7 +30,8 @@ class Provider extends AbstractProvider implements ProviderInterface
      */
     protected function getUserByToken($token)
     {
-        $response = $this->getHttpClient()->get('https://api.constantcontact.com/v2/account/info?api_key='.$this->clientId, [
+        $response = $this->getHttpClient()->get(
+            'https://api.constantcontact.com/v2/account/info?api_key='.$this->clientId, [
             'headers' => [
                 'Authorization' => 'Bearer '.$token,
             ],
@@ -43,11 +46,9 @@ class Provider extends AbstractProvider implements ProviderInterface
     protected function mapUserToObject(array $user)
     {
         return (new User())->setRaw($user)->map([
-            'id'       => null,
-            'nickname' => null,
-            'name'     => $user['first_name'].' '.$user['last_name'],
-            'email'    => $user['email'],
-            'avatar'   => null,
+            'id' => null, 'nickname' => null,
+            'name' => $user['first_name'].' '.$user['last_name'],
+            'email' => $user['email'], 'avatar' => null,
         ]);
     }
 
@@ -56,6 +57,8 @@ class Provider extends AbstractProvider implements ProviderInterface
      */
     protected function getTokenFields($code)
     {
-        return array_merge(parent::getTokenFields($code), ['grant_type' => 'authorization_code']);
+        return array_merge(parent::getTokenFields($code), [
+            'grant_type' => 'authorization_code',
+        ]);
     }
 }
