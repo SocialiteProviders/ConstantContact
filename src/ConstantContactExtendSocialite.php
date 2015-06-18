@@ -1,4 +1,5 @@
 <?php
+
 namespace SocialiteProviders\ConstantContact;
 
 use SocialiteProviders\Manager\SocialiteWasCalled;
