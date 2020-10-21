@@ -18,7 +18,7 @@ class Provider extends AbstractProvider
     protected function getAuthUrl($state)
     {
         return $this->buildAuthUrlFromBase(
-            'https://oauth2.constantcontact.com/oauth2/oauth/siteowner/authorize',
+            'https://api.cc.email/v3/idfed',
             $state
         );
     }
@@ -28,7 +28,7 @@ class Provider extends AbstractProvider
      */
     protected function getTokenUrl()
     {
-        return 'https://oauth2.constantcontact.com/oauth2/oauth/token';
+        return 'https://idfed.constantcontact.com/as/token.oauth2';
     }
 
     /**
@@ -37,7 +37,7 @@ class Provider extends AbstractProvider
     protected function getUserByToken($token)
     {
         $response = $this->getHttpClient()->get(
-            'https://api.constantcontact.com/v2/account/info?api_key='.$this->clientId,
+            'https://api.cc.email/v3/account/summary',
             [
                 'headers' => [
                     'Authorization' => 'Bearer '.$token,
@@ -54,9 +54,11 @@ class Provider extends AbstractProvider
     protected function mapUserToObject(array $user)
     {
         return (new User())->setRaw($user)->map([
-            'id'    => null, 'nickname' => null,
-            'name'  => $user['first_name'].' '.$user['last_name'],
-            'email' => $user['email'], 'avatar' => null,
+            'id' => $user['encoded_account_id'],
+            'nickname' => null,
+            'name' => $user['first_name'].' '.$user['last_name'],
+            'email' => $user['contact_email'],
+            'avatar' => null,
         ]);
     }
 
